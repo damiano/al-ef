@@ -1,7 +1,7 @@
 
 Please download RepLab 2013 dataset from http://nlp.uned.es/replab2013
 
-Note that content of the tweets are not included in the dataset.
+Note that content of the tweets is not included in the dataset.
 Tweets can be downloaded by using the twitter-tools used to obtain the TREC Tweets2011 Collection: https://github.com/lintool/twitter-tools/wiki/Tweets2011-Collection
 
 This software expects the following data:
