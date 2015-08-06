@@ -13,6 +13,7 @@ def reranker(samples, topX, rerank_method, testfeatures=[], similarity_matrix=[]
       return sorted(samples[:cutoff], key=lambda x:k_density(similarity_matrix,
              id2row[x[1]], K), reverse=True)
     return sorted(samples[:cutoff], key=lambda x:density(similarity_matrix,
+            id2row[x[1]]), reverse=True)
 
 def ranks(classifier,
           testfeatures,
