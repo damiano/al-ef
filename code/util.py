@@ -1,7 +1,7 @@
 from string import punctuation
 import csv
 import HTMLParser
-
+import re
 
 def readStopwords(stopword_dir):
   stopwords_en_filename=stopword_dir+"/stopwords.en"

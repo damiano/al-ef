@@ -12,7 +12,7 @@ from ranking import ranks
 
 def parse():
     "Set up the argument list"
-    parser = argparse.ArgumentParser(description=u'Active Learning for Entity Filtering in Microblog Streams (c) 2015 Damiano Spina, Maria-Hendrike Peetz, Maarten de Rijke.')
+    parser = argparse.ArgumentParser(description=u'Active Learning for Entity Filtering in Microblog Streams.\nDamiano Spina, Maria-Hendrike Peetz and Maarten de Rijke.\nSIGIR\'15, 2015. http://damiano.github.io/al-ef')
 
     parser.add_argument('-s', metavar="TWEET_CONTENT_FILE_TRAINING", required=True, help='file with the mapping between id an text (training)',)
     parser.add_argument('-S', metavar="TWEET_CONTENT_FILE_TEST", required=True, help='file with the mapping between id an text (test)',)
@@ -22,7 +22,7 @@ def parse():
     parser.add_argument('-T', metavar="FEATURE_FILE_TEST", required=False, help='features for testing. If not provided, BoW+presence representation is then computed by the script.')
 
     parser.add_argument('-g', metavar="GOLDSTANDARD_TRAINING_FILE", required=True,help='Goldstandard for training',)
-    parser.add_argument('-G', metavar="GOLDSTANDARD_TEST_FILE", help='Goldstandard for test (used to simulate active learning)',)
+    parser.add_argument('-G', metavar="GOLDSTANDARD_TEST_FILE", required=True, help='Goldstandard for test (used to simulate active learning)',)
 
     parser.add_argument('-O', metavar="OUTPUT_ANNOTATION_FILE", help='Outfile for the annotations in the test data.',)
     parser.add_argument('-o', metavar="OUTPUT_CLASSIFICATION_FILE", help='Outfile for the classifications in the test data.',)
@@ -32,12 +32,12 @@ def parse():
     parser.add_argument('-w', type=float, default=1, help='Number of times a newly annotated item should be added to the test set. If <1, it will be |training_set|*w')
 
 
-    parser.add_argument('-sm', type=str, help='Active Learning Sampling mode: random, margin, or margin_density, margin_density_candidate_set',default="margin")
+    parser.add_argument('-sm', type=str, help='Active Learning Sampling mode: random, margin, or margin_density',default="margin")
 
     parser.add_argument('-K', type=int, default=None, help='K for KNN')
 
-    parser.add_argument('-reranker', type=str, help='Reranker, can be density_all, density_candidate_set. If K is set, the density will be k-density', required=False)
-    parser.add_argument('-topX', type=float, default=1, help='Top X percent that will be reranked according to age. If 0, all no reranking happens.')
+    parser.add_argument('-reranker', type=str, help='Use density reranker. If K is set, the density will be k-density', required=False)
+    parser.add_argument('-topX', type=float, default=0, help='Top X percent that will be reranked. If 0, no reranking happens.')
 
     return parser.parse_args()
 
@@ -71,6 +71,7 @@ def main():
     args = parse()
     #Initialize variables:
 
+
     #Sample of iterations:
     max_iteration = 1300
     total_iterations = [ 0, 15, 30, 50, 100, 150, 300, 450, 600, 750, 900, 1000, 1100, 1300]
@@ -79,7 +80,7 @@ def main():
     reranking = args.topX > 0
     params = { "topX": args.topX }
     if args.K:
-        params["K"] = args.K
+        params['K'] = args.K
     if args.reranker:
         params['reranker'] = args.reranker
 
@@ -105,7 +106,6 @@ def main():
 
     #Features:
     if (args.t and args.T):
-        print(args.t)
         trainfeatures = readFeatures(args.t)
         testfeatures = readFeatures(args.T)
     else:
@@ -118,13 +118,13 @@ def main():
 
     #Goldstandard:
     if args.g:
-        goldstandard_training = readGoldstandard(args.g, current_entity)
+       goldstandard_training = readGoldstandard(args.g, current_entity)
     if args.G:
        goldstandard = readGoldstandard(args.G, current_entity)
 
     #filter out those tweets that are not in the goldstandard
-    trainfeatures =  { k: trainfeatures[k] for k in goldstandard_training.keys() if k in trainfeatures.keys()}
-    testfeatures = {k: testfeatures[k] for k in goldstandard.keys() if k in testfeatures.keys()}
+    trainfeatures =  { k: trainfeatures[k] for k in goldstandard_training.keys() if k in trainfeatures.keys() }
+    testfeatures = { k: testfeatures[k] for k in goldstandard.keys() if k in testfeatures.keys() }
 
     #Update label in trainfeatures:
     for tweetid,label in goldstandard_training.iteritems():
@@ -180,7 +180,6 @@ def main():
             for k,t in no_sample_testing.iteritems():
                 print k, "UNRELATED"
         else:
-            #TODO add related prob?
             for i in range(max_iteration+1):
                 if i in total_iterations:
                     filename = "%s_%d"%(args.o,i)
@@ -202,7 +201,7 @@ def main():
         classifier = classifier_module.train(appended_training.values())
 
     #Initialize density
-    if sampling_method == "margin_density_all" or params.get('reranker', None) == 'density_all':
+    if sampling_method == "margin_density" or params.get('reranker', None) == 'density':
             combined = {}
             for k, v in appended_training.iteritems():
                     combined[k] = v
@@ -243,7 +242,6 @@ def main():
             #Update the proportion of related tweets in the new training set:
             related = float(len([ v for (k,v) in appended_training.values() if v =="RELATED"]))/len(appended_training.values())
             print "entity: %s related_ratio: %f"%(current_entity,related)
-            print "related", related
 
             #Update the model
             if related <1.0 and related>0.0:
