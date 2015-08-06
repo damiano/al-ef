@@ -1,4 +1,4 @@
-# Active Learning for Entity Filtering in Microblog Streams *(WORK IN PROGRESS)*
+# Active Learning for Entity Filtering in Microblog Streams
 Code and resources to reproduce experiments decribed in SIGIR'15 short paper by [Damiano Spina](http://damianospina.com), [Maria-Hendrike Peetz](http://peetz-intelligence.com/) and [Maarten de Rijke](https://staff.fnwi.uva.nl/m.derijke/).
 ##Abstract
 
