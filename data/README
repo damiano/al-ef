@@ -1,0 +1,22 @@
+
+Please download RepLab 2013 dataset from http://nlp.uned.es/replab2013
+
+Note that content of the tweets are not included in the dataset.
+Tweets can be downloaded by using the twitter-tools used to obtain the TREC Tweets2011 Collection: https://github.com/lintool/twitter-tools/wiki/Tweets2011-Collection
+
+This software expects the following data:
+
+- The TSV files containing the content of the tweets for each entity in both training and test sets:
+   corpus/training/tweet_text/RL2013D01E001.tsv 
+   ...
+   
+   corpus/test/tweet_text/RL2013D01E001.tsv 
+   ...
+   
+
+
+- Goldstandard for the RepLab 2013 Filtering Task:
+
+goldstandard/training/goldstandard_filtering.dat
+goldstandard/test/goldstandard_fitering.dat
+
