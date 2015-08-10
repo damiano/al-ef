@@ -7,7 +7,7 @@ def margin_distance(classifier, f, classes=["RELATED", "UNRELATED"]):
     distance = abs(pdist.prob(classes[0])-pdist.prob(classes[1]))
     return distance
 
-def reranker(samples, topX, rerank_method, testfeatures=[], similarity_matrix=[], id2row=[], K=5):
+def reranker(samples, topX, testfeatures=[], similarity_matrix=[], id2row=[], K=5):
     cutoff = int(topX*len(samples)+0.5)
     if K:
       return sorted(samples[:cutoff], key=lambda x:k_density(similarity_matrix,
@@ -45,7 +45,7 @@ def ranks(classifier,
     if sampling in ["margin", "margin_density"]:
        samples.sort()
     if rerank:
-       return reranker(samples, params["topX"], params['reranker'], testfeatures=testfeatures, similarity_matrix=params.get('simmatrix', []), id2row=params.get('id2row', []), K=params.get('K', None))
+       return reranker(samples, params["topX"], testfeatures=testfeatures, similarity_matrix=params.get('simmatrix', []), id2row=params.get('id2row', []), K=params.get('K', None))
     return samples
 
 def main():

@@ -36,7 +36,6 @@ def parse():
 
     parser.add_argument('-K', type=int, default=None, help='K for KNN')
 
-    parser.add_argument('-reranker', type=str, help='Use density reranker. If K is set, the density will be k-density', required=False)
     parser.add_argument('-topX', type=float, default=0, help='Top X percent that will be reranked. If 0, no reranking happens.')
 
     return parser.parse_args()
@@ -81,8 +80,6 @@ def main():
     params = { "topX": args.topX }
     if args.K:
         params['K'] = args.K
-    if args.reranker:
-        params['reranker'] = args.reranker
 
     #Stopwords
     if args.st:
@@ -201,7 +198,7 @@ def main():
         classifier = classifier_module.train(appended_training.values())
 
     #Initialize density
-    if sampling_method == "margin_density" or params.get('reranker', None) == 'density':
+    if sampling_method == "margin_density":
             combined = {}
             for k, v in appended_training.iteritems():
                     combined[k] = v
