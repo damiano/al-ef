@@ -6,7 +6,7 @@ Monitoring the reputation of entities such as companies or brands in microblog s
 
 ## Citation
 D. Spina, M.H. Peetz, M. de Rijke  
-*Active Learning for Entity Filtering in Microblog Streams*  
+*[Active Learning for Entity Filtering in Microblog Streams](https://www.damianospina.com/publication/spina-2015-active/)*  
 Proceedings of 38th ACM SIGIR Conference on Research and Development in Information Retrieval (SIGIR). 2015.  
 
 ### BibTex
